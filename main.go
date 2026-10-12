@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"go-reloaded/tools"
 	"os"
 	"strings"
-	"strconv"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		return
 	}
 
-	lignes, err := readsample(os.Args[1])
+	lignes, err := tools.Readsample(os.Args[1])
 	if err != nil {
 		fmt.Println("Erreur lors de la lecture du fichier d'entrée:", err)
 		return
@@ -26,49 +26,31 @@ func main() {
 	}
 }
 
-// readsample lit le fichier d'entrée et renvoie la liste de ses lignes.
-func readsample(nomFichier string) ([]string, error) {
-	contenuInit, err := os.ReadFile(nomFichier)
-	if err != nil {
-		return nil, err
-	}
-	return strings.Split(string(contenuInit), "\n"), nil
-}
-
 
 
 func Marqueurs(lignes []string) []string {
-
+	err := error(nil)
 	for i := 0; i < len(lignes); i++ {
 		mots := strings.Fields(lignes[i])
 		for j := 1; j < len(mots); j++ {
-			if mots[j] == "(hex)"{
-				err := error(nil)
-				mots[j-1], err = hexToDecimal(mots[j-1])
+			if mots[j] == "(hex)" || mots[j] == "(bin)" {
+				base := 16
+				if mots[j] == "(bin)" {
+					base = 2
+				}
+				mots[j-1], err = tools.HexOrBinToDecimal(mots[j-1], base)
 				if err != nil {
-					fmt.Println("Erreur lors de la conversion hexadécimale:", err)
-					return nil
+					fmt.Println("Erreur lors de la conversion hexadécimale ou binaire:", err)
+					continue
 				}
 				mots = append(mots[:j], mots[j+1:]...)
 				j--
 				lignes[i] = strings.Join(mots, " ")
 			}
-			if mots[j] == "(bin)"{	
-				// pareil que (hex), avec la base 2
-			}
-		// étapes 5 et 6 : ajouter (up), (low), (cap) et (up, 2)...
+
+			// étapes 5 et 6 : ajouter (up), (low), (cap) et (up, 2)...
 		}
 	}
 	return lignes
 }
 
-
-// transforme un hex en int puis en string
-func hexToDecimal(mot string) (string, error) {
-	nombre, err := strconv.ParseInt(mot, 16, 64)
-	if err != nil {
-		return "", err
-	}
-	mot = strconv.FormatInt(nombre, 10)
-	return mot, nil
-}
