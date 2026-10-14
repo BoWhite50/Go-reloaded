@@ -41,8 +41,8 @@ func Transform(marqueur string, mot string) string {
 	return mot
 }
 // OccurrenceDeA remplace "A"/"a" par "An"/"an" si le mot suivant commence par une voyelle ou un h
-func OccurrenceDeA(lignes string) string {
-	mots := strings.Fields(lignes)
+func OccurrenceDeA(ligne string) string {
+	mots := strings.Fields(ligne)
 	for l := 0; l < len(mots); l++ {
 		motSuivant := ""
 		for k := l + 1; k < len(mots) && motSuivant == ""; k++ {

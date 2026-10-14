@@ -19,7 +19,7 @@ Il lit un fichier d'entrée, applique des règles de modification (conversions d
 | Groupes de ponctuation `...` `!?` | `I was thinking ... You were right` | `I was thinking... You were right` |
 | Apostrophes `' '` autour d'un ou plusieurs mots | `describe me: ' awesome '` | `describe me: 'awesome'` |
 | `a` → `an` devant une voyelle ou un `h` | `A amazing rock` | `An amazing rock` |
-| **Bonus** : guillemets doubles `" "` | `He said: " hello world "` | `He said: "hello world"` |
+| guillemets doubles `" "` | `He said: " hello world "` | `He said: "hello world"` |
 
 Une fois appliquée, chaque balise disparaît du texte, sans laisser d'espace en trop.
 Les retours à la ligne du fichier d'entrée sont conservés.
@@ -79,10 +79,12 @@ go test -v ./...
 ```
 Go-reloaded/
 ├── go.mod              module go-reloaded
-├── main.go             point d'entrée : lit les arguments, lance les corrections, écrit le résultat
+├── main.go             point d'entrée : lit les arguments, appelle tools.Assemblage, écrit le résultat
 ├── main_test.go        tests du programme complet
 └── tools/
-    ├── outils.go       les fonctions de correction
+    ├── assemblage.go   Assemblage : enchaîne toutes les corrections dans le bon ordre
+    ├── marqueurs.go    Marqueurs : applique et retire les balises (hex), (up, 2)...
+    ├── outils.go       les autres fonctions de correction
     └── outils_test.go  tests unitaires des fonctions
 ```
 
@@ -97,6 +99,8 @@ Fonctions du package `tools` :
 
 | Fonction | Rôle |
 |---|---|
+| `Assemblage` | enchaîne toutes les corrections sur chaque ligne |
+| `Marqueurs` | applique et retire les balises `(hex)`, `(bin)`, `(up)`, `(low)`, `(cap)`, `(xxx, N)` |
 | `Readsample` | lit le fichier d'entrée et renvoie ses lignes |
 | `HexOrBinToDecimal` | convertit un nombre hexadécimal ou binaire en décimal |
 | `Transform` | met un mot en majuscules, minuscules ou avec une majuscule initiale |
