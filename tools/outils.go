@@ -40,3 +40,72 @@ func Transform(marqueur string, mot string) string {
 	}
 	return mot
 }
+// OccurrenceDeA remplace "A"/"a" par "An"/"an" si le mot suivant commence par une voyelle ou un h
+func OccurrenceDeA(lignes string) string {
+	mots := strings.Fields(lignes)
+	for l := 0; l < len(mots); l++ {
+		if mots[l] == "A" {
+			if l+1 < len(mots) && strings.ContainsRune("aeiouhAEIOUH", rune(mots[l+1][0])) {
+				mots[l] = "An"
+			}
+		}
+		if mots[l] == "a" {
+			if l+1 < len(mots) && strings.ContainsRune("aeiouhAEIOUH", rune(mots[l+1][0])) {
+				mots[l] = "an"
+			}
+		}
+	}
+	return strings.Join(mots, " ")
+}
+
+// ponctuation corrige les ponctuation du text
+func Ponctuation(ligne string) string {
+	mots := strings.Fields(ligne)
+
+	for i := 1; i < len(mots); i++ {
+		reste := strings.TrimLeft(mots[i], ".,!?:;")
+		signe := ""
+		if len(mots[i]) > len(reste) {
+			signe = mots[i][:len(mots[i])-len(reste)]
+		}
+		if signe == "" {
+			continue
+		}
+		mots[i-1] += signe
+		if reste == "" {
+			mots = append(mots[:i], mots[i+1:]...)
+			i--
+		} else {
+			mots[i] = reste
+		}
+	}
+	return strings.Join(mots, " ")
+}
+
+// Guillemets corrige les espace entre les apostrophes et guillemets
+func Guillemets(ligne string) string {
+	mots := strings.Fields(ligne)
+
+	for _, signe := range []string{"'", `"`} {
+		nb := 0
+		for i := 0; i < len(mots); i++ {
+			if mots[i] != signe {
+				continue
+			}
+
+			if nb%2 == 0 && i+1 < len(mots) {
+				mots[i+1] = signe + mots[i+1]
+				mots = append(mots[:i], mots[i+1:]...)
+				nb++
+			} else if nb%2 == 1 && i > 0 {
+				mots[i-1] += signe
+				mots = append(mots[:i], mots[i+1:]...)
+				i--
+				nb++
+			}
+
+		}
+	}
+
+	return strings.Join(mots, " ")
+}

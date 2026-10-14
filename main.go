@@ -19,14 +19,14 @@ func main() {
 		fmt.Println("Erreur lors de la lecture du fichier d'entrée:", err)
 		return
 	}
-	Marqueurs(lignes)
+	Assemblage(lignes)
 
 	err = os.WriteFile(os.Args[2], []byte(strings.Join(lignes, "\n")), 0644)
 	if err != nil {
 		fmt.Println("Erreur lors de l'écriture du fichier de sortie:", err)
 	}
 }
-
+// Marqueurs s'occupe de traité les modification entre parentheses
 func Marqueurs(lignes []string) []string {
 	err := error(nil)
 	for i := 0; i < len(lignes); i++ {
@@ -83,6 +83,16 @@ func Marqueurs(lignes []string) []string {
 				lignes[i] = strings.Join(mots, " ")
 			}
 		}
+	}
+	return lignes
+}
+// Assemblage s'occupe de traité les lignes du texte 
+func Assemblage(lignes []string) []string {
+	lignes = Marqueurs(lignes)
+	for i := 0; i < len(lignes); i++ {
+		lignes[i] = tools.OccurrenceDeA(lignes[i])
+		lignes[i] = tools.Guillemets(lignes[i])
+		lignes[i] = tools.Ponctuation(lignes[i])
 	}
 	return lignes
 }
