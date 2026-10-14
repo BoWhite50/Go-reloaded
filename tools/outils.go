@@ -44,13 +44,17 @@ func Transform(marqueur string, mot string) string {
 func OccurrenceDeA(lignes string) string {
 	mots := strings.Fields(lignes)
 	for l := 0; l < len(mots); l++ {
+		motSuivant := ""
+		for k := l + 1; k < len(mots) && motSuivant == ""; k++ {
+			motSuivant = strings.TrimLeft(mots[k], `'"`)
+		}
 		if mots[l] == "A" {
-			if l+1 < len(mots) && strings.ContainsRune("aeiouhAEIOUH", rune(mots[l+1][0])) {
+			if motSuivant != "" && strings.ContainsRune("aeiouhAEIOUH", rune(motSuivant[0])) {
 				mots[l] = "An"
 			}
 		}
 		if mots[l] == "a" {
-			if l+1 < len(mots) && strings.ContainsRune("aeiouhAEIOUH", rune(mots[l+1][0])) {
+			if motSuivant != "" && strings.ContainsRune("aeiouhAEIOUH", rune(motSuivant[0])) {
 				mots[l] = "an"
 			}
 		}
@@ -72,6 +76,10 @@ func Ponctuation(ligne string) string {
 			continue
 		}
 		mots[i-1] += signe
+		if reste == "'" || reste == `"` {
+			mots[i-1] += reste
+			reste = ""
+		}
 		if reste == "" {
 			mots = append(mots[:i], mots[i+1:]...)
 			i--
