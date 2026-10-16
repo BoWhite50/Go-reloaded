@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// readsample lit le fichier d'entrée et renvoie la liste de ses lignes.
+// Readsample lit le fichier d'entrée et renvoie la liste de ses lignes.
 func Readsample(nomFichier string) ([]string, error) {
 	contenuInit, err := os.ReadFile(nomFichier)
 	if err != nil {
@@ -40,6 +40,7 @@ func Transform(marqueur string, mot string) string {
 	}
 	return mot
 }
+
 // OccurrenceDeA remplace "A"/"a" par "An"/"an" si le mot suivant commence par une voyelle ou un h
 func OccurrenceDeA(ligne string) string {
 	mots := strings.Fields(ligne)
@@ -62,7 +63,7 @@ func OccurrenceDeA(ligne string) string {
 	return strings.Join(mots, " ")
 }
 
-// ponctuation corrige les ponctuation du text
+// Ponctuation corrige les ponctuation du text
 func Ponctuation(ligne string) string {
 	mots := strings.Fields(ligne)
 

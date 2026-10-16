@@ -9,15 +9,14 @@ import (
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Println("le programme doit être lancé avec 2 fichiers: le fichier d'entrée et le fichier de sortie")
-		return
+		fmt.Fprintln(os.Stderr, "le programme doit être lancé avec 2 fichiers: le fichier d'entrée et le fichier de sortie")
+		os.Exit(1)
 	}
 
 	lignes, err := tools.Readsample(os.Args[1])
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Erreur lors de la lecture du fichier d'entrée:", err)
 		os.Exit(1)
-		return
 	}
 	tools.Assemblage(lignes)
 

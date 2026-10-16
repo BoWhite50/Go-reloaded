@@ -71,7 +71,7 @@ Pour voir le détail de chaque test :
 go test -v ./...
 ```
 
-- `main_test.go` teste le programme complet, étape par étape, avec les exemples du sujet et des cas limites.
+- `main_test.go` teste le programme complet (`tools.Assemblage`) avec les exemples du sujet et des cas limites.
 - `tools/outils_test.go` teste chaque fonction du package `tools` séparément.
 
 ## Architecture
